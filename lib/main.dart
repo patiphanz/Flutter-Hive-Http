@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hive_http/model/information.dart';
+import 'package:flutter_hive_http/locator.dart';
+
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import 'package:get_it/get_it.dart';
+
+import 'package:flutter_hive_http/model/information.dart';
 import 'package:flutter_hive_http/page/data_page.dart';
+import 'boxes.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +17,8 @@ Future main() async {
 
   Hive.registerAdapter(InformationAdapter());
   await Hive.openBox<Information>('information');
+
+  setup();
 
   runApp(const MyApp());
 }

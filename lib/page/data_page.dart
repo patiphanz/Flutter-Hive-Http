@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hive_http/locator.dart';
 import 'package:flutter_hive_http/model/information.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,6 +9,8 @@ import 'package:flutter_hive_http/boxes.dart';
 
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import 'package:get_it/get_it.dart';
 
 class DataPage extends StatefulWidget {
   const DataPage({Key? key}) : super(key: key);
@@ -23,15 +26,15 @@ class _DataPageState extends State<DataPage> {
     futureData = fetchData();
   }
 
-  // @override
-  // void dispose() {
-  //   Hive.close();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var box = Boxes.getInformation();
+    var box = locator.get<Boxes>().getInformation();
 
     return Scaffold(
       appBar: AppBar(
@@ -49,11 +52,9 @@ class _DataPageState extends State<DataPage> {
                 count: snapshot.data!.count,
               );
               box.put('information', information);
-              print(box.get('information')!.name);
-              print(box.get('information')!.age);
-              print(box.get('information')!.count);
               return Text(
-                  '${box.get('information')!.name}\n ${box.get('information')!.age} ${box.get('information')!.count}');
+                '${box.get('information')!.name}\n${box.get('information')!.age}\n${box.get('information')!.count}',
+              );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
@@ -67,8 +68,7 @@ class _DataPageState extends State<DataPage> {
 }
 
 Future<Data> fetchData() async {
-  final response =
-      await http.get(Uri.parse('https://api.agify.io/?name=shoot'));
+  final response = await http.get(Uri.parse('https://api.agify.io/?name=keng'));
 
   if (response.statusCode == 200) {
     return Data.fromJson(jsonDecode(response.body));
